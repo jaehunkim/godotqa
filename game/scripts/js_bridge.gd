@@ -8,6 +8,16 @@ var main_node: Node = null
 func _ready() -> void:
 	# Wait for main scene to be ready
 	call_deferred("_find_main")
+	# Expose time scale control to JavaScript
+	if OS.has_feature("web"):
+		JavaScriptBridge.eval("""
+window.setTimeScale = function(scale) {
+	window._godotTimeScale = scale;
+};
+window.getTimeScale = function() {
+	return window._godotTimeScale || 1.0;
+};
+""")
 
 func _find_main() -> void:
 	main_node = get_tree().get_root().get_node_or_null("Main")
@@ -15,7 +25,13 @@ func _find_main() -> void:
 func _process(_delta: float) -> void:
 	if not OS.has_feature("web"):
 		return
+	_sync_time_scale()
 	_update_js_state()
+
+func _sync_time_scale() -> void:
+	var scale = JavaScriptBridge.eval("window._godotTimeScale || 1.0")
+	if scale is float and scale > 0.0 and scale != Engine.time_scale:
+		Engine.time_scale = scale
 
 func _update_js_state() -> void:
 	if main_node == null:

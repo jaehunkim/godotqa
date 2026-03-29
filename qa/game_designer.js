@@ -66,6 +66,7 @@ const SKIP_BUILD = args['skip-build'] === true || args['skip-build'] === 'true';
 const HEADED = args.headed === true || args.headed === 'true';
 const DRY_RUN = args['dry-run'] === true || args['dry-run'] === 'true';
 const BASE_URL = args.url ?? 'http://localhost:8080';
+const GAME_SPEED = parseFloat(args.speed ?? '3');
 const RESULTS_DIR = path.join(__dirname, 'results');
 const CONFIG_PATH = path.join(__dirname, 'balance_config.json');
 
@@ -111,6 +112,7 @@ async function runQA(iterationDir) {
     `--format=both`,
     `--output-dir=${outputDir}`,
     `--output=${path.join(outputDir, 'qa_report.html')}`,
+    `--speed=${GAME_SPEED}`,
   ];
 
   if (HEADED) qaArgs.push('--headed');

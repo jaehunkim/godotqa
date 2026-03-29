@@ -52,6 +52,7 @@ const BASE_URL = args.url ?? 'http://localhost:8080';
 const OUTPUT_FILE = args.output ?? 'qa_multi_report.html';
 const OUTPUT_FORMAT = args.format ?? 'both'; // html, json, both
 const OUTPUT_DIR = args['output-dir'] ?? __dirname;
+const GAME_SPEED = parseFloat(args.speed ?? '1');
 
 // --- Constants ---
 const SWIFTSHADER_ARGS = [
@@ -344,6 +345,11 @@ async function runAgent(config) {
       { timeout: 30000 }
     );
     await page.click('canvas');
+
+    // Set game speed if configured
+    if (GAME_SPEED > 1) {
+      await page.evaluate((s) => { if (window.setTimeScale) window.setTimeScale(s); }, GAME_SPEED);
+    }
 
     agentStatuses.set(id, { ...agentStatuses.get(id), status: 'PLAYING' });
 
