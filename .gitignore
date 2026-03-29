@@ -1,0 +1,19 @@
+# Godot
+game/.godot/
+game/.import/
+
+# Build output
+build/
+
+# Node
+qa/node_modules/
+qa/test-results/
+qa/playwright-report/
+qa/qa_report_*.json
+
+# OS
+.DS_Store
+Thumbs.db
+
+# OMC
+.omc/

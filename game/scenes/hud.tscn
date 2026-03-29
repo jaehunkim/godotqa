@@ -1,0 +1,108 @@
+[gd_scene load_steps=6 format=3 uid="uid://hud001"]
+
+[ext_resource type="Script" path="res://scripts/hud.gd" id="1"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hp_bg"]
+bg_color = Color(0.3, 0.0, 0.0, 1.0)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hp_fill"]
+bg_color = Color(0.9, 0.1, 0.1, 1.0)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_xp_bg"]
+bg_color = Color(0.0, 0.0, 0.3, 1.0)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_xp_fill"]
+bg_color = Color(0.2, 0.4, 1.0, 1.0)
+
+[node name="HUD" type="CanvasLayer"]
+script = ExtResource("1")
+
+[node name="HPBar" type="ProgressBar" parent="."]
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+offset_left = 10.0
+offset_top = 10.0
+offset_right = 260.0
+offset_bottom = 34.0
+min_value = 0.0
+max_value = 100.0
+value = 100.0
+show_percentage = false
+theme_override_styles/background = SubResource("StyleBoxFlat_hp_bg")
+theme_override_styles/fill = SubResource("StyleBoxFlat_hp_fill")
+
+[node name="HPLabel" type="Label" parent="HPBar"]
+offset_left = 0.0
+offset_top = 0.0
+offset_right = 250.0
+offset_bottom = 24.0
+text = "HP"
+horizontal_alignment = 1
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+
+[node name="XPBar" type="ProgressBar" parent="."]
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+offset_left = 10.0
+offset_top = 40.0
+offset_right = 260.0
+offset_bottom = 60.0
+min_value = 0.0
+max_value = 10.0
+value = 0.0
+show_percentage = false
+theme_override_styles/background = SubResource("StyleBoxFlat_xp_bg")
+theme_override_styles/fill = SubResource("StyleBoxFlat_xp_fill")
+
+[node name="XPLabel" type="Label" parent="XPBar"]
+offset_left = 0.0
+offset_top = 0.0
+offset_right = 250.0
+offset_bottom = 20.0
+text = "XP"
+horizontal_alignment = 1
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+
+[node name="LevelLabel" type="Label" parent="."]
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+offset_left = 10.0
+offset_top = 66.0
+offset_right = 150.0
+offset_bottom = 90.0
+text = "Level: 1"
+theme_override_colors/font_color = Color(1, 1, 0.2, 1)
+theme_override_font_sizes/font_size = 18
+
+[node name="KillLabel" type="Label" parent="."]
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+offset_left = 10.0
+offset_top = 92.0
+offset_right = 150.0
+offset_bottom = 116.0
+text = "Kills: 0"
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 16
+
+[node name="TimeLabel" type="Label" parent="."]
+anchor_left = 0.5
+anchor_top = 0.0
+anchor_right = 0.5
+anchor_bottom = 0.0
+offset_left = -60.0
+offset_top = 10.0
+offset_right = 60.0
+offset_bottom = 40.0
+text = "00:00"
+horizontal_alignment = 1
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 22
