@@ -16,11 +16,11 @@ var speed: float = BASE_SPEED
 var fire_rate: float = BASE_FIRE_RATE
 var damage: float = BASE_DAMAGE
 var bullet_count: int = BASE_BULLET_COUNT
-var magnet_range: float = 50.0
+var magnet_range: float = 60.0
 var hp_regen: float = 0.0
 
 var current_xp: int = 0
-var xp_to_next: int = 10
+var xp_to_next: int = 8
 var level: int = 1
 
 var shoot_timer: float = 0.0
@@ -121,7 +121,7 @@ func add_xp(amount: int) -> void:
 	while current_xp >= xp_to_next:
 		current_xp -= xp_to_next
 		level += 1
-		xp_to_next = int(xp_to_next * 1.3)
+		xp_to_next = int(xp_to_next * 1.1)
 		level_up.emit(level)
 		xp_changed.emit(current_xp, xp_to_next)
 

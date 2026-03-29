@@ -583,6 +583,8 @@ async function ensureServer(url) {
 
 // --- HTML Report Generation ---
 function generateHTMLReport(results, outputPath, totalDuration) {
+  const dir = path.dirname(outputPath);
+  if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
   const timestamp = new Date().toISOString();
   const agentLabels = results.map((r) => `${r.agentName} (${r.strategy})`);
   const colors = results.map((r) => r.color);
@@ -954,7 +956,7 @@ async function main() {
 
   // Generate reports based on format
   if (OUTPUT_FORMAT === 'html' || OUTPUT_FORMAT === 'both') {
-    const reportPath = path.join(__dirname, OUTPUT_FILE);
+    const reportPath = path.isAbsolute(OUTPUT_FILE) ? OUTPUT_FILE : path.join(__dirname, OUTPUT_FILE);
     generateHTMLReport(results, reportPath, totalDuration);
     console.log(`\n  HTML Report:    ${reportPath}`);
   }

@@ -1,7 +1,7 @@
 extends Node
 
 var enemy_scene: PackedScene = null
-var spawn_interval: float = 2.0
+var spawn_interval: float = 2.2
 var spawn_timer: float = 0.0
 var difficulty_timer: float = 0.0
 var difficulty_level: int = 1
@@ -29,7 +29,7 @@ func _process(delta: float) -> void:
 	if difficulty_timer >= 15.0:
 		difficulty_timer = 0.0
 		difficulty_level += 1
-		spawn_interval = maxf(spawn_interval * 0.85, 0.3)
+		spawn_interval = maxf(spawn_interval * 0.90, 0.3)
 
 	if spawn_timer <= 0.0:
 		spawn_timer = spawn_interval

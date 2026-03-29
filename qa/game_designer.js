@@ -2,7 +2,7 @@
  * game_designer.js - AI Game Designer Orchestrator
  *
  * Runs an iterative loop: QA play -> analyze results -> tune balance -> re-verify.
- * Uses Claude API as the Game Designer brain to propose parameter changes.
+ * Uses OpenAI API as the Game Designer brain to propose parameter changes.
  *
  * Usage:
  *   node game_designer.js \
@@ -20,7 +20,7 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { execSync, spawn } from 'child_process';
-import Anthropic from '@anthropic-ai/sdk';
+import OpenAI from 'openai';
 
 import { readAllParameters, applyChanges, restoreBackups } from './lib/gdscript_editor.js';
 import { buildTargets, checkConvergence, formatConvergence } from './lib/balance_targets.js';
@@ -70,14 +70,14 @@ const RESULTS_DIR = path.join(__dirname, 'results');
 const CONFIG_PATH = path.join(__dirname, 'balance_config.json');
 
 // --- Validation ---
-const ANTHROPIC_API_KEY = process.env.ANTHROPIC_API_KEY;
-if (!ANTHROPIC_API_KEY) {
-  console.error('ERROR: ANTHROPIC_API_KEY environment variable is required.');
-  console.error('Usage: ANTHROPIC_API_KEY=sk-ant-... node game_designer.js');
+const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
+if (!OPENAI_API_KEY) {
+  console.error('ERROR: OPENAI_API_KEY environment variable is required.');
+  console.error('Usage: OPENAI_API_KEY=sk-... node game_designer.js');
   process.exit(1);
 }
 
-const anthropic = new Anthropic({ apiKey: ANTHROPIC_API_KEY });
+const openai = new OpenAI({ apiKey: OPENAI_API_KEY });
 
 // --- Helper Functions ---
 
@@ -168,28 +168,30 @@ async function runQA(iterationDir) {
 async function askDesigner({ qaResults, convergence, balanceSnapshot, targets, history }) {
   const messages = buildMessages({ qaResults, convergence, balanceSnapshot, targets, history });
 
-  console.log('  Calling Claude Game Designer for analysis...');
+  console.log('  Calling OpenAI Game Designer for analysis...');
 
-  const response = await anthropic.messages.create({
-    model: 'claude-sonnet-4-5-20250929',
+  const response = await openai.chat.completions.create({
+    model: 'gpt-4o',
     max_tokens: 2048,
-    system: SYSTEM_PROMPT,
-    messages,
+    messages: [
+      { role: 'system', content: SYSTEM_PROMPT },
+      ...messages,
+    ],
+    response_format: { type: 'json_object' },
   });
 
-  const raw = response.content[0]?.text ?? '{}';
+  const raw = response.choices[0]?.message?.content ?? '{}';
   const jsonText = raw.replace(/^```(?:json)?\s*/i, '').replace(/\s*```\s*$/i, '').trim();
 
   try {
     return JSON.parse(jsonText);
   } catch {
-    console.warn('  Warning: Claude returned non-JSON. Attempting extraction...');
-    // Try to find JSON in the response
+    console.warn('  Warning: OpenAI returned non-JSON. Attempting extraction...');
     const jsonMatch = raw.match(/\{[\s\S]*\}/);
     if (jsonMatch) {
       return JSON.parse(jsonMatch[0]);
     }
-    throw new Error('Failed to parse Claude designer response as JSON');
+    throw new Error('Failed to parse OpenAI designer response as JSON');
   }
 }
 
@@ -204,7 +206,7 @@ function rebuildGame() {
 
   console.log('  Rebuilding Godot web export...');
   try {
-    execSync('godot --headless --export-release "Web" web_build/index.html', {
+    execSync('godot --headless --export-release "Web" ../build/web/index.html', {
       cwd: path.join(__dirname, '..', 'game'),
       timeout: 120000,
       stdio: 'pipe',

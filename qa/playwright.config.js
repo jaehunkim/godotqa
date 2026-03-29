@@ -26,6 +26,10 @@ export default defineConfig({
           args: [
             '--disable-web-security',
             '--allow-running-insecure-content',
+            '--enable-webgl',
+            '--use-gl=angle',
+            '--use-angle=swiftshader',
+            '--enable-unsafe-swiftshader',
           ],
         },
       },
