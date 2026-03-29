@@ -9,7 +9,12 @@
     "test:headed": "npx playwright test --headed",
     "test:ui": "npx playwright test --ui",
     "ai-play": "node ai_qa.js",
-    "ai-play-claude": "node ai_qa_claude.js"
+    "ai-play-claude": "node ai_qa_claude.js",
+    "multi-qa": "node multi_agent_qa.js",
+    "multi-qa:headed": "node multi_agent_qa.js --headed",
+    "multi-qa:3": "node multi_agent_qa.js --agents=3",
+    "design": "node game_designer.js",
+    "design:quick": "node game_designer.js --agents=3 --iterations=3 --timeout=60"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.39.0",
